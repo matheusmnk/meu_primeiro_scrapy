@@ -2,6 +2,7 @@ import re
 import requests
 from bs4 import BeautifulSoup
 from selenium import webdriver
+import time
 
 # Configuração do WebDriver para suprimir logs
 options = webdriver.ChromeOptions()
@@ -24,6 +25,11 @@ url_apartamentos = site.find_all("a", href=True)
 elemento = site.find(
     'h3', class_='CozyTypography xih2fc wIyEP2 _8JKqPG r4Q8xM')
 
+Acessando_links_dos_apartamentos_disponíveis_para_alugar = "\nAcessando links dos apartamentos disponíveis para alugar..."
+for char in Acessando_links_dos_apartamentos_disponíveis_para_alugar:
+    print(char, end='', flush=True)  # end='' evita quebrar linha, flush=True garante a impressão imediata
+    time.sleep(0.05)  # espera 0.1 segundo entre cada caractere
+
 # Lista para armazenar os links filtrados
 links_filtrados = []
 
@@ -32,6 +38,11 @@ url_apartamentos_filtrados = [url_prédio["href"] for url_prédio in url_apartam
 
 url_apartamentos_formatados = ["https://www.quintoandar.com.br" + url_prédio for url_prédio in url_apartamentos_filtrados]
 
+Separando_links_dos_alugueis = "\nSeparando links dos alugueis..."
+for char in Separando_links_dos_alugueis:
+    print(char, end='', flush=True)  # end='' evita quebrar linha, flush=True garante a impressão imediata
+    time.sleep(0.05)  # espera 0.1 segundo entre cada caractere
+
 # Adicionando os links filtrados à lista
 for link in url_apartamentos_formatados:
     response = requests.get(link)
@@ -39,6 +50,11 @@ for link in url_apartamentos_formatados:
         soup = BeautifulSoup(response.content, "html.parser")
         if elemento.get_text()[39:] in soup.get_text():
             links_filtrados.append(link)
+
+            Coletando_informacoes = "\nColetando informações...\n"
+for char in Coletando_informacoes:
+    print(char, end='', flush=True)  # end='' evita quebrar linha, flush=True garante a impressão imediata
+    time.sleep(0.05)  # espera 0.1 segundo entre cada caractere
 
 # Imprimir os links filtrados
 #print(links_filtrados)
@@ -54,7 +70,7 @@ for link in links_filtrados:
         print("\nLink:", link)
 
         metro_quadrado = soup_apartamento.find("p", class_="CozyTypography xih2fc EKXjIf Ci-jp3")
-        print('\nMetragem:', metro_quadrado.get_text() if metro_quadrado else "Metragem não encontrada")
+        print('Metragem:', metro_quadrado.get_text() if metro_quadrado else "Metragem não encontrada")
 
         aluguel = soup_apartamento.find("p", class_="CozyTypography xih2fc _72Hu5c wIyEP2 _8JKqPG r4Q8xM")
         aluguel_formatado = (aluguel.get_text()[8:]) if aluguel else None
