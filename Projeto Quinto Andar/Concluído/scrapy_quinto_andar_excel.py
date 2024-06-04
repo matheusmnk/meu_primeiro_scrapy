@@ -76,7 +76,9 @@ wb = Workbook()
 ws = wb.active
 
 # Adicionar cabeçalhos
-ws.append(['Empreendimento','Data de Publicação','Metragem', 'Aluguel', 'Valor Total', 'Link'])
+ws.append(['Empreendimento', 'Metragem', 'Aluguel', 'Valor Total', 'Data de Publicação', 'Link'])
+
+#metragem, aluguel_formatado, valor_total_formatado, data, link
 
 #Adicionar texto no console para o usuário
 gerando_excel = "Gerando arquivo excel...\n"
@@ -91,7 +93,7 @@ for link in links_filtrados:
         soup_apartamento = BeautifulSoup(response.content, "html.parser")
 
         metro_quadrado = soup_apartamento.find("p", class_="CozyTypography xih2fc EKXjIf Ci-jp3")
-        metragem = metro_quadrado.get_text() if metro_quadrado else "Metragem não encontrada"
+        metragem = metro_quadrado.get_text()[0:2] if metro_quadrado else "Metragem não encontrada"
 
         aluguel = soup_apartamento.find("p", class_="CozyTypography xih2fc _72Hu5c wIyEP2 _8JKqPG r4Q8xM")
         aluguel_formatado = aluguel.get_text()[8:] if aluguel else "Aluguel não encontrado"
@@ -104,7 +106,7 @@ for link in links_filtrados:
         data = data_publicacao.text.strip()[13:] if data_publicacao else "Data de publicação não encontrada"
 
         # Adicionar os dados à planilha
-        ws.append([elemento.get_text()[39:], data, metragem, aluguel_formatado, valor_total_formatado, link])
+        ws.append([elemento.get_text()[39:], metragem, aluguel_formatado, valor_total_formatado, data, link])
 
 
 # Salvar o arquivo Excel com o nome especificado
